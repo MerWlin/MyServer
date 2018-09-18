@@ -30,3 +30,8 @@ void EventLoop::addChannel(const std::shared_ptr<Channel>& channel)
 {
     poller->updateList(channel);
 }
+
+void EventLoop::rmvChannel(const std::shared_ptr<Channel>& channel)
+{
+    poller->updateList(channel, 1);
+}

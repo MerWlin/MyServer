@@ -3,7 +3,9 @@
 
 #include<iostream>
 #include<unistd.h>
-
+#include "EventLoop.h"
+#include "Channel.h"
+#include <memory>
 namespace MyServer
 {
 class Connection
@@ -11,7 +13,7 @@ class Connection
     public:
         Connection();
         ~Connection();
-        void onRead(int sockFd);
+        void onRead(int sockFd, EventLoop* loop, const std::shared_ptr<Channel>&channel);
 };
 }
 #endif

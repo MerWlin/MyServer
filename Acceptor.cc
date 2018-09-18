@@ -64,6 +64,6 @@ void Acceptor::onAccept(int sockFd, EventLoop* loop)
     std::shared_ptr<Channel> channel(new Channel(ioFd));
     channel->setEvents(EPOLLIN);
     Connection conn;
-    channel->setEventHandler(std::bind(&Connection::onRead, &conn, ioFd));
+    channel->setEventHandler(std::bind(&Connection::onRead, &conn, ioFd, loop, channel));
     loop->addChannel(channel);
 }

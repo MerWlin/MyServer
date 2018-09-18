@@ -32,15 +32,21 @@ void Epoll::poll(std::vector<std::shared_ptr<Channel>>& channelList)
 
 void Epoll::updateList(const std::shared_ptr<Channel> &channel, int op)
 {
-    switch(op) // ADD
+    struct epoll_event ev;
+    int channelFd = channel->getSockFd();
+    ev.data.fd = channelFd;
+    ev.events = channel->getEvents();      
+    switch(op) 
     {
-        default:
-            struct epoll_event ev;
-            int channelFd = channel->getSockFd();
-            ev.data.fd = channelFd;
-            ev.events = channel->getEvents();      
+        case 1:     // remove
+            if(::epoll_ctl(epollFd, EPOLL_CTL_DEL, channelFd, &ev) < 0)
+                std::cout<<"Epoll ctrl DEL failed: fd"<<channelFd<<std::endl;
+            else
+                loop->channelRecord.erase(channelFd);
+            break;
+        default:    // add           
             if(::epoll_ctl(epollFd, EPOLL_CTL_ADD, channelFd, &ev) < 0)
-                std::cout<<"Epoll ctrl failed: fd"<<channelFd<<std::endl;
+                std::cout<<"Epoll ctrl ADD failed: fd"<<channelFd<<std::endl;
             else
                 loop->channelRecord[channelFd] = channel;
     }

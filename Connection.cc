@@ -5,11 +5,16 @@ Connection::Connection(){}
 
 Connection::~Connection(){}
 
-void Connection::onRead(int sockFd)
+void Connection::onRead(int sockFd, EventLoop* loop, const std::shared_ptr<Channel>&channel)
 {
     // Read sth.
     char buf[20];
     int rLen = read(sockFd, buf, 10);
+    if(rLen == 0)
+    {
+        std::cout<<"Connection close by peer."<<std::endl;
+        loop->rmvChannel(channel);
+    }
     std::cout<<"Data read: ";
     for(int i = 0; i < rLen; ++i)
         std::cout<<buf[i];

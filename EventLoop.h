@@ -16,6 +16,7 @@ class EventLoop
         ~EventLoop();
         void loop();
         void addChannel(const std::shared_ptr<Channel>& channel);
+        void rmvChannel(const std::shared_ptr<Channel>& channel);
         std::map<int, std::shared_ptr<Channel>> channelRecord;
 
     private:
